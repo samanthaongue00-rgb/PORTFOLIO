@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator | Samantha Ongue</title>
+  <link rel="icon" type="image/svg+xml" href="logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #f8f6f0;
+      --bg-calc: #ffffff;
+      --text-main: #1e1b18;
+      --text-muted: #78716c;
+      --border-subtle: #e7e2d9;
+      --btn-num-bg: #f4f1ea;
+      --btn-num-hover: #eae5dc;
+      --btn-op-bg: #e8dfd3;
+      --btn-op-hover: #ddd2c4;
+      --btn-accent: #2c2520;
+      --btn-accent-hover: #453c35;
+      --radius: 18px;
+      --radius-btn: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .top-nav {
+      width: 100%;
+      max-width: 360px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .back-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--text-main);
+    }
+
+    .app-tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .calculator-wrapper {
+      background: var(--bg-calc);
+      width: 100%;
+      max-width: 360px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 16px 36px rgba(30, 27, 24, 0.06), 0 2px 6px rgba(30, 27, 24, 0.03);
+      padding: 24px;
+    }
+
+    .display-screen {
+      background: #faf8f5;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      text-align: right;
+      min-height: 96px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    .display-prev {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      min-height: 22px;
+      word-break: break-all;
+      letter-spacing: 0.02em;
+    }
+
+    .display-curr {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.15;
+      word-break: break-all;
+    }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .calc-btn {
+      font-family: inherit;
+      font-size: 1.25rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      border-radius: var(--radius-btn);
+      height: 60px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--btn-num-bg);
+      color: var(--text-main);
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .calc-btn:hover {
+      background-color: var(--btn-num-hover);
+      transform: translateY(-1px);
+    }
+
+    .calc-btn:active {
+      transform: translateY(1px);
+    }
+
+    .calc-btn.op {
+      background-color: var(--btn-op-bg);
+      font-weight: 600;
+      color: #3b322a;
+    }
+
+    .calc-btn.op:hover {
+      background-color: var(--btn-op-hover);
+    }
+
+    .calc-btn.equals {
+      background-color: var(--btn-accent);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .calc-btn.equals:hover {
+      background-color: var(--btn-accent-hover);
+    }
+
+    .calc-btn.clear {
+      color: #a83226;
+      font-weight: 700;
+    }
+
+    .calc-btn.span-two {
+      grid-column: span 2;
+    }
+
+    .keyboard-hint {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-nav">
+    <a href="samanthaONGUE.html" class="back-link">&larr; Back to Portfolio</a>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <img src="logo.svg" alt="Samantha Ongue Logo" style="height:24px; width:auto;" />
+      <span class="app-tag">Calculator</span>
+    </div>
+  </div>
+
+  <div class="calculator-wrapper">
+    <div class="display-screen" aria-live="polite">
+      <div class="display-prev" id="display-prev"></div>
+      <div class="display-curr" id="display-curr">0</div>
+    </div>
+
+    <div class="keypad-grid">
+      <button class="calc-btn clear" onclick="handleClear()">C</button>
+      <button class="calc-btn op" onclick="handleNegate()">+/-</button>
+      <button class="calc-btn op" onclick="handlePercent()">%</button>
+      <button class="calc-btn op" onclick="handleOperator('/')">/</button>
+
+      <button class="calc-btn" onclick="handleNumber('7')">7</button>
+      <button class="calc-btn" onclick="handleNumber('8')">8</button>
+      <button class="calc-btn" onclick="handleNumber('9')">9</button>
+      <button class="calc-btn op" onclick="handleOperator('*')">&times;</button>
+
+      <button class="calc-btn" onclick="handleNumber('4')">4</button>
+      <button class="calc-btn" onclick="handleNumber('5')">5</button>
+      <button class="calc-btn" onclick="handleNumber('6')">6</button>
+      <button class="calc-btn op" onclick="handleOperator('-')">&minus;</button>
+
+      <button class="calc-btn" onclick="handleNumber('1')">1</button>
+      <button class="calc-btn" onclick="handleNumber('2')">2</button>
+      <button class="calc-btn" onclick="handleNumber('3')">3</button>
+      <button class="calc-btn op" onclick="handleOperator('+')">+</button>
+
+      <button class="calc-btn span-two" onclick="handleNumber('0')">0</button>
+      <button class="calc-btn" onclick="handleDecimal()">.</button>
+      <button class="calc-btn equals" onclick="handleEquals()">=</button>
+    </div>
+
+    <p class="keyboard-hint">Keyboard supported (0-9, +, -, *, /, Enter, Backspace, Esc)</p>
+  </div>
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    let currentInput = '0';
+    let previousInput = '';
+    let currentOperator = null;
+    let shouldResetDisplay = false;
+
+    const displayCurr = document.getElementById('display-curr');
+    const displayPrev = document.getElementById('display-prev');
+
+    function updateDisplay() {
+      displayCurr.textContent = currentInput;
+      if (currentOperator != null && previousInput !== '') {
+        const symbol = currentOperator === '*' ? 'x' : currentOperator;
+        displayPrev.textContent = `${previousInput} ${symbol}`;
+      } else {
+        displayPrev.textContent = '';
+      }
+    }
+
+    function handleNumber(num) {
+      if (currentInput === '0' || shouldResetDisplay) {
+        currentInput = num;
+        shouldResetDisplay = false;
+      } else {
+        if (currentInput.length < 12) {
+          currentInput += num;
+        }
+      }
+      updateDisplay();
+    }
+
+    function handleDecimal() {
+      if (shouldResetDisplay) {
+        currentInput = '0.';
+        shouldResetDisplay = false;
+        updateDisplay();
+        return;
+      }
+      if (!currentInput.includes('.')) {
+        currentInput += '.';
+        updateDisplay();
+      }
+    }
+
+    function handleOperator(op) {
+      if (currentOperator !== null && !shouldResetDisplay) {
+        calculate();
+      }
+      previousInput = currentInput;
+      currentOperator = op;
+      shouldResetDisplay = true;
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (currentOperator === null || shouldResetDisplay) return;
+
+      const prev = parseFloat(previousInput);
+      const curr = parseFloat(currentInput);
+
+      if (isNaN(prev) || isNaN(curr)) return;
+
+      let result = 0;
+      switch (currentOperator) {
+        case '+':
+          result = prev + curr;
+          break;
+        case '-':
+          result = prev - curr;
+          break;
+        case '*':
+          result = prev * curr;
+          break;
+        case '/':
+          if (curr === 0) {
+            currentInput = 'Error';
+            previousInput = '';
+            currentOperator = null;
+            shouldResetDisplay = true;
+            updateDisplay();
+            return;
+          }
+          result = prev / curr;
+          break;
+        default:
+          return;
+      }
+
+      // Round to 8 decimal places max to prevent floating precision bugs
+      result = Math.round(result * 100000000) / 100000000;
+      currentInput = result.toString();
+      currentOperator = null;
+      previousInput = '';
+      shouldResetDisplay = true;
+      updateDisplay();
+    }
+
+    function handleEquals() {
+      calculate();
+    }
+
+    function handleClear() {
+      currentInput = '0';
+      previousInput = '';
+      currentOperator = null;
+      shouldResetDisplay = false;
+      updateDisplay();
+    }
+
+    function handleNegate() {
+      if (currentInput === '0' || currentInput === 'Error') return;
+      currentInput = (parseFloat(currentInput) * -1).toString();
+      updateDisplay();
+    }
+
+    function handlePercent() {
+      if (currentInput === '0' || currentInput === 'Error') return;
+      currentInput = (parseFloat(currentInput) / 100).toString();
+      updateDisplay();
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key >= '0' && e.key <= '9') {
+        handleNumber(e.key);
+      } else if (e.key === '.') {
+        handleDecimal();
+      } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+        handleOperator(e.key);
+      } else if (e.key === 'Enter' || e.key === '=') {
+        e.preventDefault();
+        handleEquals();
+      } else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') {
+        handleClear();
+      } else if (e.key === 'Backspace') {
+        if (!shouldResetDisplay && currentInput !== '0' && currentInput.length > 0) {
+          currentInput = currentInput.slice(0, -1);
+          if (currentInput === '' || currentInput === '-') currentInput = '0';
+          updateDisplay();
+        }
+      }
+    });
+
+    updateDisplay();
+  </script>
+</body>
+</html>
